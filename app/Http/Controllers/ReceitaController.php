@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Receitas;
+use App\Services\Receita\ReceitaService;
 use Illuminate\Http\Request;
 
 class ReceitaController extends Controller
 {
+    public function __construct(
+        private ReceitaService $receitaService
+    ) {
+        
+    }
+
+    public function index()
+    {
+        return $this->receitaService->list();
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -15,23 +26,27 @@ class ReceitaController extends Controller
             'data' => 'required'
         ]);
 
-        $response = Receitas::where('descricao', $request->descricao)->get()->toArray();
+        return $this->receitaService->create($request);
+    }
 
-        if(empty($response)){
-            return Receitas::create($request->all());
-        } else {
-            foreach($response as $res) {
-                $dataNoBanco = $res['data'];
-                $dataNoBanco = date('m', strtotime($dataNoBanco));
-                $dataDaRequisicao = $request->data;
-                $dataDaRequisicao = date('m', strtotime($dataDaRequisicao));
+    public function get(int $id)
+    {
+        return $this->receitaService->getById($id);
+    }
 
-                if($dataDaRequisicao === $dataNoBanco) {
-                    return 'Já existe uma receita no mesmo mês';
-                }
-            }
-        }
-        
-        return Receitas::create($request->all());
+    public function update(int $id, Request $request)
+    {
+        $this->validate($request, [
+            'descricao' => 'required',
+            'valor' => 'required',
+            'data' => 'required'
+        ]);
+
+        return $this->receitaService->update($id, $request);
+    }
+
+    public function destroy(int $id)
+    {
+        return $this->receitaService->destroy($id);
     }
 }
