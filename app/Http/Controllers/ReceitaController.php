@@ -9,12 +9,28 @@ class ReceitaController extends Controller
 {
     public function store(Request $request)
     {
-        // 1ª Validar
-        // Validar os campos
-        // Descricao - valor - data
-        // Validator
+        $this->validate($request, [
+            'descricao' => 'required',
+            'valor' => 'required',
+            'data' => 'required'
+        ]);
 
-        // 2ª Validar se a descricao da receita já foi utilizada dentro do mês
+        $response = Receitas::where('descricao', $request->descricao)->get()->toArray();
+
+        if(empty($response)){
+            return Receitas::create($request->all());
+        } else {
+            foreach($response as $res) {
+                $dataNoBanco = $res['data'];
+                $dataNoBanco = date('m', strtotime($dataNoBanco));
+                $dataDaRequisicao = $request->data;
+                $dataDaRequisicao = date('m', strtotime($dataDaRequisicao));
+
+                if($dataDaRequisicao === $dataNoBanco) {
+                    return 'Já existe uma receita no mesmo mês';
+                }
+            }
+        }
         
         return Receitas::create($request->all());
     }
