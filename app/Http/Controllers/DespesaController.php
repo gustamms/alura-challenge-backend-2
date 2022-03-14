@@ -26,4 +26,9 @@ class DespesaController extends Controller
     {
         return $this->despesas->all();
     }
+
+    public function get(int $id)
+    {
+        return $this->despesas->where('id', $id)->get();
+    }
 }
