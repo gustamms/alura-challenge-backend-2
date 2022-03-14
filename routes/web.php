@@ -16,3 +16,11 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => '/receitas'], function () use ($router) {
+    $router->post('/', 'ReceitaController@store');
+    $router->get('', 'ReceitaController@index');
+    $router->get('{id}', 'ReceitaController@get');
+    $router->put('{id}', 'ReceitaController@update');
+    $router->delete('{id}', 'ReceitaController@destroy');
+});
