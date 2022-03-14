@@ -21,4 +21,9 @@ class DespesaController extends Controller
 
         return $this->despesas->create($request->all());
     }
+
+    public function index()
+    {
+        return $this->despesas->all();
+    }
 }
