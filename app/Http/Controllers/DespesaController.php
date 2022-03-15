@@ -31,4 +31,17 @@ class DespesaController extends Controller
     {
         return $this->despesas->where('id', $id)->get();
     }
+
+    public function update(int $id, Request $request)
+    {
+        $this->validate($request, [
+            'descricao' => 'required',
+            'valor' => 'required',
+            'data' => 'required'
+        ]);
+
+        $response = $this->despesas->where('id', $id)->update($request->all());
+
+        return $response ? 'Atualizado com sucesso' : 'Não foi possível atualizar';
+    }
 }
