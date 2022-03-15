@@ -44,4 +44,11 @@ class DespesaController extends Controller
 
         return $response ? 'Atualizado com sucesso' : 'Não foi possível atualizar';
     }
+
+    public function destroy(int $id)
+    {
+        $response = $this->despesas->where('id', $id)->delete();
+
+        return $response ? "Id ${id} removido com sucesso" : "Não foi possível remover id ${id}";
+    }
 }
