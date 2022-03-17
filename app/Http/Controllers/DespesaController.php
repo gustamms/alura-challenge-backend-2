@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Despesas;
+use App\Services\Despesa\DespesaService;
 use Illuminate\Http\Request;
 
 class DespesaController extends Controller
 {
-    public function __construct(private Despesas $despesas)
-    {
+    public function __construct(
+        private Despesas $despesas,
+        private DespesaService $despesaService
+    ) {
     }
 
     public function store(Request $request)
@@ -19,7 +22,7 @@ class DespesaController extends Controller
             'data' => 'required'
         ]);
 
-        return $this->despesas->create($request->all());
+        return $this->despesaService->create($request->all());
     }
 
     public function index()
@@ -40,8 +43,6 @@ class DespesaController extends Controller
             'data' => 'required'
         ]);
 
-        $response = $this->despesas->where('id', $id)->update($request->all());
-
-        return $response ? 'Atualizado com sucesso' : 'Não foi possível atualizar';
+        return $this->despesaService->update($id, $request->all());
     }
 }
