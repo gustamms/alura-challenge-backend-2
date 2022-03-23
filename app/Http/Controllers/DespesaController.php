@@ -45,4 +45,11 @@ class DespesaController extends Controller
 
         return $this->despesaService->update($id, $request->all());
     }
+
+    public function destroy(int $id)
+    {
+        $response = $this->despesas->where('id', $id)->delete();
+
+        return $response ? "Id ${id} removido com sucesso" : "Não foi possível remover id ${id}";
+    }
 }
